@@ -160,8 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: new AppBar(
         title: const Text('Plugin example app'),
       ),
-      body: new Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      body: new ListView(
         children: [
           new Container(
             padding: const EdgeInsets.all(24.0),
