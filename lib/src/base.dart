@@ -19,6 +19,7 @@ class FlutterWebviewPlugin {
   final _onDestroy = new StreamController<Null>.broadcast();
   final _onUrlChanged = new StreamController<String>.broadcast();
   final _onStateChanged = new StreamController<WebViewStateChanged>.broadcast();
+  final _onProgressChanged = new StreamController<double>.broadcast();
   final _onScrollXChanged = new StreamController<double>.broadcast();
   final _onScrollYChanged = new StreamController<double>.broadcast();
   final _onHttpError = new StreamController<WebViewHttpError>.broadcast();
@@ -45,6 +46,9 @@ class FlutterWebviewPlugin {
       case "onScrollYChanged":
         _onScrollYChanged.add(call.arguments["yDirection"]);
         break;
+      case "onProgressChanged":
+        _onProgressChanged.add(call.arguments["progress"]);
+        break;
       case "onState":
         _onStateChanged.add(
           new WebViewStateChanged.fromMap(
@@ -68,6 +72,9 @@ class FlutterWebviewPlugin {
   /// content is Map for type: {shouldStart(iOS)|startLoad|finishLoad}
   /// more detail than other events
   Stream<WebViewStateChanged> get onStateChanged => _onStateChanged.stream;
+
+  /// Listening web view loading progress estimation, value between 0.0 and 1.0
+  Stream<double> get onProgressChanged => _onProgressChanged.stream;
 
   /// Listening web view y position scroll change
   Stream<double> get onScrollYChanged => _onScrollYChanged.stream;
@@ -189,6 +196,7 @@ class FlutterWebviewPlugin {
     _onDestroy.close();
     _onUrlChanged.close();
     _onStateChanged.close();
+    _onProgressChanged.close();
     _onScrollXChanged.close();
     _onScrollYChanged.close();
     _onHttpError.close();
