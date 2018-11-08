@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.view.Display;
+import android.webkit.CookieManager;
 import android.widget.FrameLayout;
 import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
@@ -76,6 +77,8 @@ public class FlutterWebviewPlugin implements MethodCallHandler, PluginRegistry.A
                 break;
             case "cleanCookies":
                 cleanCookies(call, result);
+            case "getCookies":
+                getCookies(call, result);
                 break;
             default:
                 result.notImplemented();
@@ -228,6 +231,12 @@ public class FlutterWebviewPlugin implements MethodCallHandler, PluginRegistry.A
             CookieManager.getInstance().removeAllCookie();
         }
         result.success(null);
+    }
+    
+    private void getCookies(MethodCall call, final MethodChannel.Result result) {
+        String url = call.argument("url");
+        String cookies = CookieManager.getInstance().getCookie(url);
+        result.success(cookies);
     }
 
     private int dp2px(Context context, float dp) {
