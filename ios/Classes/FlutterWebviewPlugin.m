@@ -257,7 +257,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
             NSMutableString *cookieString = [NSMutableString new];
             for (NSHTTPCookie *cookie in cookies) {
                 if ([cookie.domain containsString:url.host]) {
-                    [cookieString appendFormat:@"%@=%@", cookie.name, cookie.value];
+                    [cookieString appendFormat:@"%@=%@; ", cookie.name, cookie.value];
                 }
             }
             completionHandler(cookieString.length > 0 ? cookieString : nil);
