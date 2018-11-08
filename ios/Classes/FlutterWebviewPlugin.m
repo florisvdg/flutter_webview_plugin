@@ -58,6 +58,10 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     } else if ([@"stopLoading" isEqualToString:call.method]) {
         [self stopLoading];
         result(nil);
+    } else if ([@"getCookies" isEqualToString:call.method]) {
+        [self getCookies:call completionHandler:^(NSString * cookies) {
+            result(cookies);
+        }];
     } else {
         result(FlutterMethodNotImplemented);
     }
@@ -227,6 +231,24 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
 - (void)stopLoading {
     if (self.webview != nil) {
         [self.webview stopLoading];
+    }
+}
+
+- (void)getCookies:(FlutterMethodCall*)call completionHandler:(void (^_Nullable)(NSString *cookies))completionHandler {
+    NSString *urlString = call.arguments[@"url"];
+    NSURL *url = [NSURL URLWithString:urlString];
+    if (@available(iOS 11.0, *)) {
+        [[WKWebsiteDataStore defaultDataStore].httpCookieStore getAllCookies:^(NSArray<NSHTTPCookie *> *_Nonnull cookies) {
+            NSMutableString *cookieString = [NSMutableString new];
+            for (NSHTTPCookie *cookie in cookies) {
+                if ([cookie.domain containsString:url.host]) {
+                    [cookieString appendFormat:@"%@=%@", cookie.name, cookie.value];
+                }
+            }
+            completionHandler(cookieString.length > 0 ? cookieString : nil);
+        }];
+    } else {
+        completionHandler(nil);
     }
 }
 

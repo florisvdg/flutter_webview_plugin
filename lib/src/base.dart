@@ -203,18 +203,12 @@ class FlutterWebviewPlugin {
     _instance = null;
   }
 
-  Future<Map<String, String>> getCookies() async {
-    final cookiesString = await evalJavascript('document.cookie');
-    final cookies = <String, String>{};
+  Future<String> getDocumentCookies() async {
+    return await evalJavascript('document.cookie');
+  }
 
-    if (cookiesString?.isNotEmpty == true) {
-      cookiesString.split(';').forEach((String cookie) {
-        final splited = cookie.split('=');
-        cookies[splited[0]] = splited[1];
-      });
-    }
-
-    return cookies;
+  Future<String> getCookies(String url) async {
+    return await _channel.invokeMethod('getCookies', {'url':url});
   }
 
   /// resize webview

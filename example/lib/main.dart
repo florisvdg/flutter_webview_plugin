@@ -232,7 +232,17 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           new RaisedButton(
             onPressed: () {
-              flutterWebviewPlugin.getCookies().then((m) {
+              flutterWebviewPlugin.getDocumentCookies().then((m) {
+                setState(() {
+                  _history.add('document cookies: $m');
+                });
+              });
+            },
+            child: const Text('Document cookies'),
+          ),
+          new RaisedButton(
+            onPressed: () {
+              flutterWebviewPlugin.getCookies(selectedUrl).then((m) {
                 setState(() {
                   _history.add('cookies: $m');
                 });
